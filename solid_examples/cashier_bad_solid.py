@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Protocol
 import datetime
 
 class StoreManager:
@@ -61,41 +61,32 @@ class StoreManager:
         print(f"Total: Rp{order['total']}")
         print("Terima kasih telah berbelanja!")
 
-class FatStoreInterface:
-    def add_product(self, product):
-        raise NotImplementedError
-
-    def remove_product(self, product_id):
-        raise NotImplementedError
-
-    def create_customer(self, customer):
-        raise NotImplementedError
-
-    def export_analytics(self):
-        raise NotImplementedError
-
-    def connect_crm(self):
-        raise NotImplementedError
+class ProductCatalogInterface(Protocol):
+    # Interface kecil khusus katalog.
+    def add_product(self, product: Dict):
+        ...
 
 
-class SimpleKiosk(FatStoreInterface):
+class SalesRecordInterface(Protocol):
+    # Interface kecil khusus pencatatan penjualan.
+    def record_sale(self, order: Dict):
+        ...
+
+
+class MiniKiosk(ProductCatalogInterface, SalesRecordInterface):
+    # Kiosk hanya implement interface yang memang dia butuhkan.
     def __init__(self):
-        self._local_sales = []
+        self.products: Dict[int, Dict] = {}
+        self.sales = []
 
-    def add_product(self, product):
-        print("(kiosk) add_product dipanggil")
+    def add_product(self, product: Dict):
+        product_id = product.get("id")
+        if product_id is None:
+            raise ValueError("Product harus punya field 'id'")
+        self.products[product_id] = product
 
-    def remove_product(self, product_id):
-        raise NotImplementedError("SimpleKiosk tidak mendukung remove_product")
-
-    def create_customer(self, customer):
-        self._local_sales.append(customer)
-
-    def export_analytics(self):
-        pass
-
-    def connect_crm(self):
-        pass
+    def record_sale(self, order: Dict):
+        self.sales.append(order)
 
 class EmailNotifier:
     def send(self, to: str, message: str):
