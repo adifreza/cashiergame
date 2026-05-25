@@ -1,3 +1,8 @@
+import {
+    normalizeBufferPercentage,
+    parseJSONField,
+} from './game-logic.mjs';
+
 document.addEventListener('DOMContentLoaded', () => {
     
     const loginContainer = document.getElementById('login-container');
@@ -165,12 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
             saveGithubBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Simpan ke GitHub`;
             saveGithubBtn.disabled = false;
         }
-    }
-
-    function normalizeBufferPercentage(value) {
-        const parsed = Number(value);
-        if (!Number.isFinite(parsed)) return 5;
-        return Math.min(100, Math.max(0, parsed));
     }
 
     async function fetchSizeConfigFromGitHub() {
@@ -494,18 +493,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeModal() {
         setOverlayState(gameModal, false);
-    }
-
-    function parseJSONField(valueStr, errorEl) {
-        if (!valueStr.trim()) return {}; 
-        try {
-            const parsed = JSON.parse(valueStr);
-            errorEl.style.display = 'none';
-            return parsed;
-        } catch (e) {
-            errorEl.style.display = 'block';
-            return null;
-        }
     }
 
     saveGameBtn.addEventListener('click', () => {

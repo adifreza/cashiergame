@@ -1,3 +1,11 @@
+import {
+    buildExportText,
+    filterGames,
+    formatSizeGB,
+    normalizeBufferPercentage,
+    parseSizeToGB,
+} from './game-logic.mjs';
+
 document.addEventListener('DOMContentLoaded', () => {
     
     const grid = document.getElementById('game-grid');
@@ -352,47 +360,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const query = (searchInput && searchInput.value ? searchInput.value : '').toLowerCase();
 
-        displayedGamesData = gamesData.filter((game) => {
-            if (!game) return false;
-            const matchesQuery = !query || (game.title || '').toLowerCase().includes(query);
-            const matchesCategory = (category === 'all') || (game._category === category);
-            return matchesQuery && matchesCategory;
-        });
-
-        
-        if (category === 'all') {
-            displayedGamesData.sort((a, b) => {
-                if (a._category === b._category) {
-                    return a._index - b._index;
-                }
-                if (a._category === 'pc') return -1;
-                if (b._category === 'pc') return 1;
-                return 0;
-            });
-        }
+        displayedGamesData = filterGames(gamesData, query, category);
 
         renderGrid(true);
     }
 
     
-    function parseSizeToGB(sizeStr) {
-        if (!sizeStr) return 0;
-        const s = String(sizeStr).replace(',', '.').toUpperCase();
-        const match = s.match(/\d+(?:\.\d+)?/);
-        const num = match ? parseFloat(match[0]) : NaN;
-        if (isNaN(num)) return 0;
-        
-        if (s.includes('MB')) return num / 1024;
-        if (s.includes('KB')) return num / (1024 * 1024);
-        return num; 
-    }
-
-    function formatSizeGB(sizeGB) {
-        const safe = Number.isFinite(sizeGB) ? sizeGB : 0;
-        const rounded = Math.round((safe + Number.EPSILON) * 10) / 10;
-        return `${rounded.toFixed(1)} GB`;
-    }
-
     function debounce(func, delay) {
         let timeout;
         return function(...args) {
@@ -452,41 +425,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         listEl.appendChild(fragment);
-    }
-
-    function stripVersionSuffix(title) {
-        if (!title) return '';
-
-        let text = String(title).trim();
-        const versionSuffixRe = /\s*\((?:\s*(?:v\s*\d|build\b|Build\b|B_\d|b_\d)[^)]*)\)\s*$/;
-
-        while (versionSuffixRe.test(text)) {
-            text = text.replace(versionSuffixRe, '').trim();
-        }
-
-        return text;
-    }
-
-    function needsPs2Suffix(game) {
-        if (!game) return false;
-        if (game._category === 'ps2') return true;
-
-        const platform = game.game_info ? String(game.game_info.Platform || '') : '';
-        return platform.toUpperCase().includes('PS2');
-    }
-
-    function formatExportTitle(game) {
-        const title = stripVersionSuffix((game && game.title) ? game.title : 'Untitled');
-
-        if (!needsPs2Suffix(game)) {
-            return title;
-        }
-
-        if (/\(PS2\)\s*$/i.test(title)) {
-            return title;
-        }
-
-        return `${title} (PS2)`;
     }
 
     
@@ -951,27 +889,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setOverlayState(exportModal, false);
     }
 
-    function buildExportText() {
-        const selectedArr = getSelectedGames();
-        const totalSize = totalUsedGB;
-
-        if (selectedArr.length === 0) {
-            return `Daftar Game Pesanan\n\n(Belum ada game yang dipilih)`;
-        }
-
-        const lines = [];
-        lines.push('Daftar Game Pesanan');
-        lines.push('');
-
-        selectedArr.forEach((game, i) => {
-            lines.push(`${i + 1}. ${formatExportTitle(game)}`);
-        });
-
-        lines.push('');
-        lines.push(`Total Size: ${totalSize.toFixed(1)} GB`);
-        return lines.join('\n');
-    }
-
     async function copyTextToClipboard(text) {
         
         if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
@@ -1005,7 +922,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (copyTextBtn) {
         copyTextBtn.addEventListener('click', async () => {
             try {
-                const text = buildExportText();
+                const text = buildExportText(selectedGames, gamesByTitle, totalUsedGB);
                 const ok = await copyTextToClipboard(text);
                 if (!ok) throw new Error('Copy gagal');
                 showToast('Teks daftar game berhasil di-copy!', 'success');
