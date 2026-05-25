@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - WD Games</title>
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/admin.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+  </head>
+  <body class="admin-body">
+    
+    <div id="login-container" class="admin-login-container">
+      <div class="login-box">
+        <h2>GitHub Admin Login</h2>
+        <p class="text-secondary login-note">
+          Masukkan detail kredensial repositori GitHub Anda untuk mengelola
+          database JSON.
+        </p>
+
+        <div class="input-group">
+          <label>GitHub Username (Owner)</label>
+          <input
+            type="text"
+            id="gh-owner"
+            class="admin-input"
+            placeholder="Misal: usernameku"
+          />
+        </div>
+        <div class="input-group">
+          <label>Repository Name</label>
+          <input
+            type="text"
+            id="gh-repo"
+            class="admin-input"
+            value="wd-games"
+            placeholder="Misal: wd_games"
+          />
+        </div>
+        <div class="input-group">
+          <label>Personal Access Token (PAT)</label>
+          <input
+            type="password"
+            id="gh-token"
+            class="admin-input"
+            placeholder="ghp_xxxxxxxxxxxx"
+          />
+        </div>
+
+        <div class="remember-row">
+          <input
+            type="checkbox"
+            id="remember-gh"
+            checked
+            class="remember-checkbox"
+          />
+          <label
+            for="remember-gh"
+            class="remember-label"
+            >Simpan informasi login di perangkat ini</label
+          >
+        </div>
+
+        <button
+          id="login-btn"
+          class="custom-select login-submit"
+        >
+          Connect & Load Database
+        </button>
+        <div
+          id="login-error"
+          class="login-error"
+        ></div>
+      </div>
+    </div>
+
+    
+    <div id="dashboard-container" class="admin-dashboard dashboard-hidden">
+      <header class="admin-header">
+        <div class="header-left">
+          <h2><span class="logo-wd">WD</span> <span class="logo-games">Games</span> <span class="text-accent">Admin Mode</span></h2>
+          <div id="repo-info" class="text-secondary repo-info"></div>
+        </div>
+        <div class="header-right header-actions">
+          <button
+            id="add-game-btn"
+            class="custom-select btn-blue header-btn"
+          >
+            + Tambah Game
+          </button>
+          <button
+            id="save-github-btn"
+            class="custom-select btn-green header-btn-flex"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+              ></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            Simpan ke GitHub
+          </button>
+          <button
+            id="logout-btn"
+            class="custom-select logout-btn"
+          >
+            Keluar
+          </button>
+        </div>
+      </header>
+
+      <main class="admin-main">
+        <div class="controls controls-bar">
+          <input
+            type="text"
+            id="admin-search"
+            placeholder="Cari judul game di database..."
+            class="search-input admin-search"
+          />
+          <div class="buffer-group">
+            <label for="size-buffer-input" class="text-secondary buffer-label">Buffer Size %:</label>
+            <input
+              type="number"
+              id="size-buffer-input"
+              class="admin-input buffer-input"
+              value="5"
+              min="0"
+              max="100"
+              step="1"
+            />
+            <button id="size-buffer-save-btn" class="custom-select btn-blue buffer-save-btn">
+              Simpan
+            </button>
+          </div>
+          <div class="stats text-secondary">
+            Total Database:
+            <strong id="total-db-count" class="text-accent">0</strong> Game
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="export-table admin-table admin-table-shell">
+            <thead>
+              <tr>
+                <th width="5%">No</th>
+                <th width="40%">Judul Game</th>
+                <th width="15%">Gambar</th>
+                <th width="15%">Size (Deteksi)</th>
+                <th width="25%">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body">
+              
+            </tbody>
+          </table>
+        </div>
+        <div class="load-more-admin-wrap">
+          <button
+            id="admin-load-more"
+            class="custom-select admin-load-more-btn"
+          >
+            Load More (50)
+          </button>
+        </div>
+      </main>
+    </div>
+
+    
+    <div id="game-modal" class="modal-overlay">
+      <div class="center-modal game-modal-shell">
+        <div class="sheet-header">
+          <h2 id="form-modal-title">Form Data Game</h2>
+          <button id="close-form-btn" class="close-btn">&times;</button>
+        </div>
+        <div
+          class="sheet-content game-modal-content"
+        >
+          <input type="hidden" id="form-index" value="-1" />
+
+          <div class="input-group">
+            <label
+              class="text-secondary form-label"
+              >Judul Game</label
+            >
+            <input type="text" id="form-title" class="admin-input" required />
+          </div>
+
+          <div class="input-group">
+            <label
+              class="text-secondary form-label"
+              >Banner URL (Link Gambar)</label
+            >
+            <input type="text" id="form-banner" class="admin-input" required />
+            <img
+              id="form-banner-preview"
+              src=""
+              class="banner-preview"
+            />
+          </div>
+
+          <div class="input-group">
+            <label
+              class="text-secondary form-label"
+              >System Requirements (Format JSON)</label
+            >
+            <textarea
+              id="form-reqs"
+              class="admin-input json-textarea"
+              rows="5"
+              placeholder='Contoh:&#10;{&#10;  "OS": "Windows 10",&#10;  "Processor": "Intel i5",&#10;  "Memory": "8 GB RAM"&#10;}'
+            ></textarea>
+            <small class="text-danger field-error" id="reqs-error"
+              >Format JSON tidak valid!</small
+            >
+          </div>
+
+          <div class="input-group">
+            <label
+              class="text-secondary form-label"
+              >Game Info (Format JSON)
+              <span class="text-accent"
+                >*Harus memuat 'Game Size' untuk dideteksi</span
+              ></label
+            >
+            <textarea
+              id="form-info"
+              class="admin-input json-textarea"
+              rows="5"
+              placeholder='Contoh:&#10;{&#10;  "Genre": "Action",&#10;  "Game Size": "50 GB"&#10;}'
+            ></textarea>
+            <small class="text-danger field-error" id="info-error"
+              >Format JSON tidak valid!</small
+            >
+          </div>
+
+          <button
+            id="save-game-btn"
+            class="custom-select save-game-btn"
+          >
+            Simpan Perubahan (Tersimpan Secara Lokal)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/admin.js?v=1.1"></script>
+  </body>
+</html>

@@ -1,0 +1,321 @@
+
+
+.admin-body {
+  background-color: var(--bg-dark);
+  
+  background-image: linear-gradient(var(--overlay), var(--overlay)), url("../assets/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-body {
+    background-attachment: scroll;
+  }
+}
+
+.admin-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-box {
+  background: var(--bg-card);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.login-box h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.login-note {
+  margin-bottom: 20px;
+}
+
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0 20px 0;
+}
+
+.remember-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.remember-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.login-submit {
+  width: 100%;
+  border: none;
+  background: var(--accent-gradient);
+  color: #000;
+  margin-top: 10px;
+  padding: 12px;
+}
+
+.login-error {
+  color: var(--danger);
+  margin-top: 15px;
+  display: none;
+  text-align: center;
+  font-weight: 600;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 12px 15px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-main {
+  padding: 20px 40px;
+  flex: 1;
+}
+
+.dashboard-hidden {
+  display: none;
+}
+
+.repo-info {
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.header-btn {
+  border: none;
+  padding: 8px 16px;
+}
+
+.header-btn-flex {
+  border: none;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logout-btn {
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background: transparent;
+  padding: 8px 16px;
+}
+
+.controls-bar {
+  margin-bottom: 20px;
+}
+
+.admin-search {
+  max-width: 400px;
+}
+
+.buffer-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.buffer-label {
+  font-weight: 600;
+}
+
+.buffer-input {
+  max-width: 80px;
+}
+
+.buffer-save-btn {
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+.admin-table-shell {
+  min-width: 800px;
+}
+
+.load-more-admin-wrap {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.admin-load-more-btn {
+  display: none;
+  padding: 10px 30px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: rgba(0, 210, 255, 0.05);
+}
+
+.game-modal-shell {
+  max-width: 700px;
+  width: 90%;
+}
+
+.game-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.banner-preview {
+  max-width: 150px;
+  margin-top: 10px;
+  border-radius: 8px;
+  display: none;
+}
+
+.json-textarea {
+  font-family: monospace;
+}
+
+.save-game-btn {
+  background: var(--accent-gradient);
+  color: #000;
+  border: none;
+  margin-top: 15px;
+  padding: 12px;
+  font-weight: 800;
+}
+
+.field-error {
+  display: none;
+}
+
+.admin-table th, .admin-table td {
+  vertical-align: middle;
+}
+
+.game-thumb {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.btn-blue {
+  background: rgba(0, 210, 255, 0.1);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.btn-green {
+  background: rgba(46, 213, 115, 0.1);
+  color: #2ed573;
+  border: 1px solid #2ed573;
+}
+
+.btn-danger {
+  background: rgba(255, 71, 87, 0.1);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.action-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  background: transparent;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-edit { background: rgba(0, 210, 255, 0.2); color: var(--accent); border: 1px solid var(--accent); }
+.btn-del { background: rgba(255, 71, 87, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+  }
+  .admin-main {
+    padding: 10px 20px;
+  }
+}
